@@ -34,6 +34,11 @@
   import BScroll from 'better-scroll'
   export default {
     name: "TopSearch",
+    props:{
+      url:{
+        type:String
+      }
+    },
     data() {
       return {
         selectedResult: '',
@@ -47,6 +52,7 @@
     },
     methods: {
       showSearch() {
+        console.log('showSearch')
         this.searchStatus = false
         this.showResult = true
         //this.search(null,this.selectedResult)
@@ -65,6 +71,7 @@
         }
       },
       search(e, keyword) {
+        console.log(11)
         this.selectedResult = e.target.value
         this.labelHidden(e)
         //----------------
@@ -72,7 +79,7 @@
         clearTimeout(this.timer)
         this.timer = setTimeout(() => {
           if (e.target.value !== '') {
-            axios.get('http://doclever.cn:8090/mock/5c62e01a3dce46264b25bf54/getSupplier', {
+            axios.get(this.url, {
               params: {
                 keyword: e.target.value
               }
@@ -136,7 +143,9 @@
 
   .top-search .input-wrap span {
     margin-left: 0.1rem;
-    display: inline-block;
+    display: inline-flex;
+    justify-content: flex-start;
+    align-items: center;
     width: 100%;
     height: 0.17rem;
     font-size: 0.12rem;

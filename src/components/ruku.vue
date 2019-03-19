@@ -1,62 +1,74 @@
 <template>
-    <div>
-      <MyFilter></MyFilter>
-      <div class="date-wrap">
-        <span class="show">{{this.date?this.date:initDate()}}</span>
-        <div class="data-plugin-wrap">
-          <input type="date" @input="getDate($event)">
-          <i class="date-icon"></i>
-        </div>
+  <div>
+    <MyFilter url="http://doclever.cn:8090/mock/5c62e01a3dce46264b25bf54/getChukuSupplier"></MyFilter>
+    <div class="date-wrap">
+      <span class="show">{{this.date?this.date:initDate()}}</span>
+      <div class="data-plugin-wrap">
+        <input type="date" @input="getDate($event)">
+        <i class="date-icon"></i>
       </div>
-      <div class="list-wrap" ref="wrapper">
-        <div class="wrap">
-          <ul class="content">
-            <li v-for="(item,index) in list" :key="index">
-              <div class="head">
-                <div class="left">
-                  <span class="materiel-name">{{controlLength(item.materiel,6)}}</span>
-                  <!--<span class="materiel-id">({{controlLength(item.tabNumber,20)}})</span>-->
-                </div>
-                <div class="right">
-                  <span>{{item.status === 1 ? '正常':'关闭'}}</span>
-                  <i class="normal-icon"></i>
-                </div>
+    </div>
+    <div class="list-wrap" ref="wrapper">
+      <div class="wrap">
+        <ul class="content">
+          <li v-for="(item,index) in list" :key="index">
+            <div class="head">
+              <div class="left">
+                <span class="materiel-name">{{controlLength(item.materialname,6)}}</span>
+                <!--<span class="materiel-id">({{controlLength(item.tabNumber,20)}})</span>-->
               </div>
-              <div class="supplier">{{item.supplier}}</div>
-              <div class="bottom">
-                <div class="label-wrap">
-                  <span class="label">累计收货检斤量{{item.weight}}T</span>
-                  <span class="label">{{controlLength(item.organization,8)}}</span>
-                </div>
-                <div class="more">
-                  <router-link :to="{name: 'detail', params: {id: item.id,serialNum:item.serialNum}}">更多</router-link>
-                </div>
+              <div class="right">
+                <span>-{{item.rukuNum}}</span>
               </div>
-            </li>
-          </ul>
-          <div class="loading-wrapper" v-show="showLoadingWrap">
-            <p class="line"></p>
-            <img src="../assets/loading-bottom.gif" alt="" v-show="showLoadingImg">
-            <span v-show="!showLoadingImg">暂无数据</span>
-            <p class="line"></p>
-          </div>
+            </div>
+            <div class="supplier">{{item.suppliername}}</div>
+            <div class="bottom">
+              <div class="label-wrap">
+                <span class="label">{{item.contractNumber || '暂无数据'}}T</span>
+                <!--<span class="label">{{controlLength(item.organization,8)}}</span>-->
+              </div>
+              <div class="more">
+                <router-link :to="{name: 'rukudetail',
+                  params: {
+                    materialname: item.materialname,
+                    suppliername:item.suppliername,
+                    data:item.data,
+                    contractNumber:item.contractNumber,
+                    rukuNum:item.rukuNum,
+                    assistQty:item.assistQty,
+                    taxPrice:item.taxPrice,
+                    remark:item.remark,
+                    model:item.model,
+                 }
+                }">更多</router-link>
+              </div>
+            </div>
+          </li>
+        </ul>
+        <div class="loading-wrapper" v-show="showLoadingWrap">
+          <p class="line"></p>
+          <img src="../assets/loading-bottom.gif" alt="" v-show="showLoadingImg">
+          <span v-show="!showLoadingImg">暂无数据</span>
+          <p class="line"></p>
         </div>
       </div>
     </div>
+  </div>
 </template>
 
 <script>
   import axios from 'axios'
   import BScroll from 'better-scroll'
   import MyFilter from './myfilter'
+
   export default {
     name: "ruku",
     components: {
-      MyFilter
+      MyFilter,
     },
     data() {
       return {
-        date:'',
+        date: '',
         list: [],
         showLoadingWrap: false,
         showLoadingImg: false,
@@ -64,7 +76,9 @@
     },
     methods: {
       controlLength(str, len) {
-        return str.length > 6 ? str.slice(0, len) + '...' : str
+        if (str) {
+          return str.length > 6 ? str.slice(0, len) + '...' : str
+        }
       },
       initDate() {
         let date = new Date();
@@ -87,7 +101,7 @@
       loadData(page, pageAmount, materiel, organization, date, supplier) {
         this.showLoadingWrap = true;
         this.showLoadingImg = true
-        axios.get('http://rap2api.taobao.org/app/mock/121282/getList', {
+        axios.get('http://doclever.cn:8090/mock/5c62e01a3dce46264b25bf54/getRukuListMock', {
           params: {
             page: page,
             pageAmount: pageAmount,
@@ -103,7 +117,7 @@
               this.showLoadingWrap = false;
               this.page++
               this.list = response.data.data.concat(this.list);
-              console.log('list',this.list)
+              console.log('list', this.list)
               this.$nextTick(() => {
                 if (!this.scroll) {
                   this.scroll = new BScroll(this.$refs.wrapper, {
@@ -200,6 +214,7 @@
     background: url("../assets/date.png") no-repeat;
     background-size: contain;
   }
+
   .list-wrap {
     /*height: calc(100% - 0.8rem);*/
     height: calc(100% - 1.2rem);
@@ -268,9 +283,8 @@
   }
 
   .list-wrap .content li .head .right > span {
-    padding-right: 0.07rem;
-    font-size: 0.12rem;
-    color: #19be6b;
+    font-size: 0.14rem;
+    color: #007aff;
   }
 
   .list-wrap .content li .head .right .normal-icon {

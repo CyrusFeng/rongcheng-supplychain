@@ -1,7 +1,10 @@
 <template>
 
   <div>
-    <MyFilter></MyFilter>
+    <MyFilter v-if="currentIndex == 0"
+              url="http://doclever.cn:8090/mock/5c62e01a3dce46264b25bf54/getChukuSupplier"></MyFilter>
+    <MyFilter v-if="currentIndex == 1"
+              url="http://doclever.cn:8090/mock/5c62e01a3dce46264b25bf54/getChukuSupplier"></MyFilter>
     <div class="date-wrap">
       <span class="show">{{this.date?this.date:initDate()}}</span>
       <div class="data-plugin-wrap">
@@ -9,11 +12,18 @@
         <i class="date-icon"></i>
       </div>
     </div>
+    <!--<div class="tab-title">-->
+      <!--<div class="nav-item" :class="{'nav_active':index == currentIndex}" v-for="(item,index) in titlebar"-->
+           <!--:key="index" @click="changeIndex(index)">-->
+        <!--<span>{{item.name}}</span>-->
+      <!--</div>-->
+    <!--</div>-->
     <div class="tab-title">
       <div class="nav-item" :class="{'nav_active':index == currentIndex}" v-for="(item,index) in titlebar"
-           :key="index" @click="changeIndex(index)">
+           :key="index" @click="changeIndex(index,$event)" ref="nav_item">
         <span>{{item.name}}</span>
       </div>
+      <span class="line" ref="line"></span>
     </div>
     <div class="swiper-container">
       <div class="swiper-wrapper">
@@ -24,22 +34,34 @@
                 <li v-for="(item,index) in salelist" :key="index">
                   <div class="head">
                     <div class="left">
-                      <span class="materiel-name">{{controlLength(item.materiel,6)}}</span>
+                      <span class="materiel-name">{{item.materialname}}&nbsp;&nbsp;{{item.model}}</span>
                       <!--<span class="materiel-id">({{controlLength(item.tabNumber,20)}})</span>-->
                     </div>
-                    <div class="right">
-                      <span>{{item.status === 1 ? '正常':'关闭'}}</span>
-                      <i class="normal-icon"></i>
-                    </div>
+                    <!--<div class="right">-->
+                      <!--<span>{{item.status === 1 ? '正常':'关闭'}}</span>-->
+                      <!--<i class="normal-icon"></i>-->
+                    <!--</div>-->
                   </div>
-                  <div class="supplier">{{item.supplier}}</div>
+                  <div class="supplier">{{item.clientname}}</div>
                   <div class="bottom">
                     <div class="label-wrap">
-                      <span class="label">累计收货检斤量{{item.weight}}T</span>
-                      <span class="label">{{controlLength(item.organization,8)}}</span>
+                      <span class="label">{{item.contractNumber}}</span>
                     </div>
                     <div class="more">
-                      <router-link :to="{name: 'detail', params: {id: item.id,serialNum:item.serialNum}}">更多</router-link>
+                      <router-link :to="{name: 'chukudetail',
+                        params: {
+                          materialname: item.materialname,
+                          clientname:item.clientname,
+                          data:item.data,
+                          contractNumber:item.contractNumber,
+                          chukuNum:item.chukuNum,
+                          assistQty:item.assistQty,
+                          taxPrice:item.taxPrice,
+                          remark:item.remark,
+                          model:item.model,
+                       }
+                      }">更多
+                      </router-link>
                     </div>
                   </div>
                 </li>
@@ -55,22 +77,35 @@
                 <li v-for="(item,index) in purchaselist" :key="index">
                   <div class="head">
                     <div class="left">
-                      <span class="materiel-name">{{controlLength(item.materiel,6)}}</span>
+                      <span class="materiel-name">{{item.materialname}}&nbsp;&nbsp;{{item.model}}</span>
                       <!--<span class="materiel-id">({{controlLength(item.tabNumber,20)}})</span>-->
                     </div>
-                    <div class="right">
-                      <span>{{item.status === 1 ? '正常':'关闭'}}</span>
-                      <i class="normal-icon"></i>
-                    </div>
+                    <!--<div class="right">-->
+                      <!--<span>{{item.status === 1 ? '正常':'关闭'}}</span>-->
+                      <!--<i class="normal-icon"></i>-->
+                    <!--</div>-->
                   </div>
-                  <div class="supplier">{{item.supplier}}</div>
+                  <div class="supplier">{{item.suppliername}}</div>
                   <div class="bottom">
                     <div class="label-wrap">
-                      <span class="label">累计收货检斤量{{item.weight}}T</span>
-                      <span class="label">{{controlLength(item.organization,8)}}</span>
+                      <span class="label">{{item.contractNumber}}</span>
+                      <!--<span class="label">{{controlLength(item.organization,8)}}</span>-->
                     </div>
                     <div class="more">
-                      <router-link :to="{name: 'detail', params: {id: item.id,serialNum:item.serialNum}}">更多</router-link>
+                      <router-link :to="{name: 'rukudetail',
+                       params: {
+                          materialname: item.materialname,
+                          suppliername:item.suppliername,
+                          data:item.data,
+                          contractNumber:item.contractNumber,
+                          rukuNum:item.rukuNum,
+                          assistQty:item.assistQty,
+                          taxPrice:item.taxPrice,
+                          remark:item.remark,
+                          model:item.model,
+                       }
+                      }">更多
+                      </router-link>
                     </div>
                   </div>
                 </li>
@@ -83,10 +118,10 @@
     </div>
 
     <!--<div class="loading-wrapper" v-show="!showLoadingWrap">-->
-      <!--<p class="line"></p>-->
-      <!--<img src="../assets/loading-bottom.gif" alt="" v-show="showLoadingImg">-->
-      <!--<span v-show="!showLoadingImg">暂无数据</span>-->
-      <!--<p class="line"></p>-->
+    <!--<p class="line"></p>-->
+    <!--<img src="../assets/loading-bottom.gif" alt="" v-show="showLoadingImg">-->
+    <!--<span v-show="!showLoadingImg">暂无数据</span>-->
+    <!--<p class="line"></p>-->
     <!--</div>-->
   </div>
 </template>
@@ -126,11 +161,10 @@
         date: '',
         salelist: [],
         purchaselist: [],
-        salescroll:null,
-        purchasescroll:null,
+        salescroll: null,
+        purchasescroll: null,
         showLoadingWrap: false,
         showLoadingImg: false,
-
       }
     },
     beforeRouteEnter(to, from, next) {
@@ -140,34 +174,21 @@
             pagination: {
               el: '.swiper-pagination'
             },
-            // loop: true,
-            // lazy: {
-            //   loadPreNext: true
-            // },
             on: {
-              slideChangeTransitionEnd: function () {
-                // vm.currentIndex = vm.detailSwiper.activeIndex
-                // vm.currentIndex = vm.detailSwiper.activeIndex
-              },
               slideChangeTransitionStart: function () {
-                // if(vm.detailSwiper.isEnd){
-                //   alert('isEnd')
-                //   vm.detailSwiper.activeIndex = (vm.detailSwiper.slides.length - 1);
-                // }
-                // if (vm.detailSwiper.isBeginning) {
-                //   alert('isBeginning')
-                //   vm.detailSwiper.activeIndex = 0
-                // }
                 vm.currentIndex = vm.detailSwiper.activeIndex
-
-                // alert(vm.detailSwiper.activeIndex)
               }
             },
           })
-          vm.loadData('sale',1, 10)
+          vm.loadData('sale', 1, 10)
         })
       })
-
+    },
+    mounted(){
+      let {right} = this.$refs.nav_item[0].getBoundingClientRect()
+      this.$refs.line.style.left = right/2 + 'px'
+      this.$refs.line.style.transform = 'translateX(-50%)'
+      this.$refs.line.style.visibility = 'visible'
     },
     components: {
       MyFilter,
@@ -175,7 +196,9 @@
     },
     methods: {
       controlLength(str, len) {
-        return str.length > 6 ? str.slice(0, len) + '...' : str
+        if (str) {
+          return str.length > 6 ? str.slice(0, len) + '...' : str
+        }
       },
       initDate() {
         let date = new Date();
@@ -193,13 +216,13 @@
       },
       getDate(e) {
         this.date = e.target.value
-        this.loadData('sale',1, 10)
+        this.loadData('sale', 1, 10)
       },
       loadData(type, page, pageAmount, materiel, organization, date, supplier) {
         this.showLoadingWrap = true;
         this.showLoadingImg = true
-        if (type === 'sale'){
-          axios.get('http://rap2api.taobao.org/app/mock/121282/getList', {
+        if (type === 'sale') {
+          axios.get('http://doclever.cn:8090/mock/5c62e01a3dce46264b25bf54/getPurchaseOrderListMock', {
             params: {
               page: page,
               pageAmount: pageAmount,
@@ -242,8 +265,8 @@
             .catch((error) => {
               this.showLoadingImg = false
             })
-        } else if(type === 'purchase'){
-          axios.get('http://rap2api.taobao.org/app/mock/121282/getList', {
+        } else if (type === 'purchase') {
+          axios.get('http://doclever.cn:8090/mock/5c62e01a3dce46264b25bf54/getPurchaseOrderListMock', {
             params: {
               page: page,
               pageAmount: pageAmount,
@@ -268,7 +291,7 @@
                       }
                     })
                     this.purchasescroll.on('pullingUp', () => {
-                      this.loadData(type,this.page, 10, this.chosenMaterielList, this.chosenOrganizationList, this.date, this.selectedResultId)
+                      this.loadData(type, this.page, 10, this.chosenMaterielList, this.chosenOrganizationList, this.date, this.selectedResultId)
                       this.purchasescroll.finishPullUp()
                       // 事情做完，需要调用此方法告诉 better-scroll 数据已加载，否则上拉事件只会执行一次
                     })
@@ -287,17 +310,23 @@
         }
 
       },
-      changeIndex(index) {
+      changeIndex(index,$event) {
         this.currentIndex = index;
         this.detailSwiper.slideTo(this.currentIndex);
+
+        console.log($event.target)
+        let {width,left} = $event.target.getBoundingClientRect()
+        // this.$refs.line.style.width = width+'px'
+        this.$refs.line.style.left = left+width/2 + 'px'
+        this.$refs.line.style.transition = 'all 350ms'
       },
     },
-    watch:{
-      currentIndex(){
-        console.log(this.currentIndex,this.purchaselist.length)
-        if (this.currentIndex === 1){
-          if(this.purchaselist.length == 0){
-            this.loadData('purchase',1, 10)
+    watch: {
+      currentIndex() {
+        console.log(this.currentIndex, this.purchaselist.length)
+        if (this.currentIndex === 1) {
+          if (this.purchaselist.length == 0) {
+            this.loadData('purchase', 1, 10)
           }
         }
       }
@@ -383,6 +412,20 @@
     justify-content: center;
     align-items: center;
     width: 100%;
+    position: relative;
+  }
+  .line{
+    background:#007aff;
+    border-radius:0.015rem;
+    width:0.21rem;
+    height:0.03rem;
+
+    position: absolute;
+    visibility: hidden;
+    /*left: 50%;*/
+    /*transform: translateX(-50%);*/
+    bottom: 0;
+    /*border-bottom: 4px solid blue;*/
   }
 
   .nav-item {
@@ -397,15 +440,16 @@
     display: inline-block;
     line-height: 32px;
     border-bottom: 2px solid rgba(237, 91, 0, 0);
-    color: rgb(116, 116, 116);
-    border-color: rgb(242, 242, 242);
+    color: #b5b5b5;
+    /*border-color: rgb(242, 242, 242);*/
     width: 100%;
     text-align: center;
   }
 
   .nav-item.nav_active span {
-    color: rgb(237, 91, 0);
-    border-color: rgb(237, 91, 0);
+    /*color: rgb(237, 91, 0);*/
+    color: #007aff;
+    /*border-color: rgb(237, 91, 0);*/
   }
 
   .list-wrap {

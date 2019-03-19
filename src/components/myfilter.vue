@@ -5,7 +5,7 @@
         <span class="top-filter-btn-name">筛选</span>
         <i :class="showFilter?'triangle-up':'triangle-down'"></i>
       </div>
-      <TopSearch></TopSearch>
+      <TopSearch :url="url"></TopSearch>
     </header>
     <div class="filter-panel" v-show="showFilter" ref="filterPanel">
       <div class="filter-wrap" @click.stop ref="filterWrap" @click="changeShowFilter" v-if="filterData.length > 0">
@@ -47,6 +47,11 @@
 
   export default {
     name: "myfilter",
+    props:{
+      url:{
+        type:String
+      }
+    },
     components:{
       TopSearch
     },

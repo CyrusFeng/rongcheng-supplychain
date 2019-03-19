@@ -1,7 +1,11 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import myfilter from '../components/myfilter'
-import detail from '../components/detail'
+import chukudetail from '../components/chukudetail'
+import rukudetail from '../components/rukudetail'
+// import detail from '../components/chukudetail'
+// import detail from '../components/chukudetail'
+
 import chuku from '../components/chuku'
 import ruku from '../components/ruku'
 import order from '../components/order'
@@ -19,9 +23,20 @@ export default new Router({
       }
     },
     {
-      path: '/detail',
-      name: 'detail',
-      component: detail
+      path: '/chukudetail',
+      name: 'chukudetail',
+      component: chukudetail,
+      meta:{
+        index:1
+      }
+    },
+    {
+      path: '/rukudetail',
+      name: 'rukudetail',
+      component: rukudetail,
+      meta:{
+        index:11
+      }
     },
     {
       path: '/chuku',
@@ -36,7 +51,7 @@ export default new Router({
       name: 'ruku',
       component: ruku,
       meta:{
-        index:1
+        index:10
       }
     },
     {
@@ -44,7 +59,7 @@ export default new Router({
       name: 'order',
       component: order,
       meta:{
-        index:2
+        index:20
       }
     },
   ]

@@ -10,7 +10,7 @@ import '../config/reset.css'
 rem()
 
 Vue.config.productionTip = false
-Vue.prototype.$remove = function remove(arr, val) {
+Vue.prototype.$remove = function (arr, val) {
   if(val instanceof Object && val.id){
     let index = 0
     for (let i = 0; i < arr.length; i++) {
@@ -21,7 +21,9 @@ Vue.prototype.$remove = function remove(arr, val) {
   return arr
 }
 Vue.prototype.$controlLength = function (str, len) {
-  return str.length > 6 ? str.slice(0, len) + '...' : str
+  if(str){
+    return str.length > 6 ? str.slice(0, len) + '...' : str
+  }
 }
 
 /* eslint-disable no-new */
@@ -31,4 +33,6 @@ new Vue({
   components: { App },
   template: '<App/>'
 })
+
+
 

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <MyFilter></MyFilter>
+    <MyFilter url="http://doclever.cn:8090/mock/5c62e01a3dce46264b25bf54/getChukuSupplier"></MyFilter>
     <div class="date-wrap">
       <span class="show">{{this.date?this.date:initDate()}}</span>
       <div class="data-plugin-wrap">
@@ -14,22 +14,34 @@
           <li v-for="(item,index) in list" :key="index">
             <div class="head">
               <div class="left">
-                <span class="materiel-name">{{controlLength(item.materiel,6)}}</span>
+                <span class="materiel-name">{{controlLength(item.materialname,6)}}</span>
                 <!--<span class="materiel-id">({{controlLength(item.tabNumber,20)}})</span>-->
               </div>
               <div class="right">
-                <span>{{item.status === 1 ? '正常':'关闭'}}</span>
-                <i class="normal-icon"></i>
+                <span>-{{item.chukuNum}}</span>
+                <!--<i class="normal-icon"></i>-->
               </div>
             </div>
-            <div class="supplier">{{item.supplier}}</div>
+            <div class="supplier">{{item.clientname}}</div>
             <div class="bottom">
               <div class="label-wrap">
-                <span class="label">累计收货检斤量{{item.weight}}T</span>
-                <span class="label">{{controlLength(item.organization,8)}}</span>
+                <span class="label">{{item.contractNumber || '暂无数据'}}T</span>
+                <!--<span class="label">当前库存{{item.currentNum || '暂无数据'}}</span>-->
               </div>
               <div class="more">
-                <router-link :to="{name: 'detail', params: {id: item.id,serialNum:item.serialNum}}">更多</router-link>
+                <router-link :to="{name: 'chukudetail',
+                 params: {
+                    materialname: item.materialname,
+                    clientname:item.clientname,
+                    data:item.data,
+                    contractNumber:item.contractNumber,
+                    chukuNum:item.chukuNum,
+                    assistQty:item.assistQty,
+                    taxPrice:item.taxPrice,
+                    remark:item.remark,
+                    model:item.model,
+                 }
+                }">更多</router-link>
               </div>
             </div>
           </li>
@@ -46,6 +58,7 @@
 </template>
 
 <script>
+
   import axios from 'axios'
   import BScroll from 'better-scroll'
   import MyFilter from './myfilter'
@@ -53,11 +66,11 @@
   export default {
     name: "chuku",
     components: {
-      MyFilter
+      MyFilter,
     },
     data() {
       return {
-        date:'',
+        date: '',
         list: [],
         showLoadingWrap: false,
         showLoadingImg: false,
@@ -65,7 +78,10 @@
     },
     methods: {
       controlLength(str, len) {
-        return str.length > 6 ? str.slice(0, len) + '...' : str
+        console.log(str)
+        if(str){
+          return str.length > 6 ? str.slice(0, len) + '...' : str
+        }
       },
       initDate() {
         let date = new Date();
@@ -88,7 +104,7 @@
       loadData(page, pageAmount, materiel, organization, date, supplier) {
         this.showLoadingWrap = true;
         this.showLoadingImg = true
-        axios.get('http://rap2api.taobao.org/app/mock/121282/getList', {
+        axios.get('http://doclever.cn:8090/mock/5c62e01a3dce46264b25bf54/getChukuListMock', {
           params: {
             page: page,
             pageAmount: pageAmount,
@@ -99,12 +115,12 @@
           }
         })
           .then((response) => {
-
+            console.log(response.data.data)
             if (response.data.data.length > 0) {
               this.showLoadingWrap = false;
               this.page++
               this.list = response.data.data.concat(this.list);
-              console.log('list',this.list)
+              console.log('list', this.list)
               this.$nextTick(() => {
                 if (!this.scroll) {
                   this.scroll = new BScroll(this.$refs.wrapper, {
@@ -114,7 +130,7 @@
                     }
                   })
                   this.scroll.on('pullingUp', () => {
-                    this.loadData(this.page, 10, this.chosenMaterielList, this.chosenOrganizationList, this.date, this.selectedResultId)
+                    this.loadData(this.page, 10)
                     this.scroll.finishPullUp()
                     // 事情做完，需要调用此方法告诉 better-scroll 数据已加载，否则上拉事件只会执行一次
                   })
@@ -130,6 +146,7 @@
           .catch((error) => {
             this.showLoadingImg = false
           })
+
       },
     },
     beforeRouteEnter(to, from, next) {
@@ -201,6 +218,7 @@
     background: url("../assets/date.png") no-repeat;
     background-size: contain;
   }
+
   .list-wrap {
     /*height: calc(100% - 0.8rem);*/
     height: calc(100% - 1.2rem);
@@ -212,7 +230,7 @@
     padding-top: 0.18rem;
     padding-bottom: 0.19rem;
     padding-right: 0.12rem;
-    /*border-bottom: 1px solid #efefef;*/
+    border-bottom: 1px solid #efefef;
     font-size: 0.1rem;
   }
 
@@ -240,7 +258,7 @@
   }
 
   .list-wrap .content li .head {
-    margin-bottom: 0.08rem;
+    margin-bottom: 0.12rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -269,9 +287,8 @@
   }
 
   .list-wrap .content li .head .right > span {
-    padding-right: 0.07rem;
-    font-size: 0.12rem;
-    color: #19be6b;
+    font-size:0.14rem;
+    color:#007aff;
   }
 
   .list-wrap .content li .head .right .normal-icon {
