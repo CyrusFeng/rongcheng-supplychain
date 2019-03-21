@@ -154,7 +154,7 @@
       // }
     },
     created() {
-      axios.get('http://doclever.cn:8090/mock/5c62e01a3dce46264b25bf54/getScreen').then((response) => {
+      axios.get('getScreen.pwo').then((response) => {
         if (response.data.data.length > 0) {
           this.filterData = response.data.data
           this.filterData.forEach((item) => {

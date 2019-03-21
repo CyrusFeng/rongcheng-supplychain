@@ -2,9 +2,9 @@
 
   <div>
     <MyFilter v-if="currentIndex == 0"
-              url="http://doclever.cn:8090/mock/5c62e01a3dce46264b25bf54/getChukuSupplier"></MyFilter>
+              url="getSalesOrderSupplier.scm"></MyFilter>
     <MyFilter v-if="currentIndex == 1"
-              url="http://doclever.cn:8090/mock/5c62e01a3dce46264b25bf54/getChukuSupplier"></MyFilter>
+              url="getPurchaseOrderSupplier.scm"></MyFilter>
     <div class="date-wrap">
       <span class="show">{{this.date?this.date:initDate()}}</span>
       <div class="data-plugin-wrap">
@@ -222,7 +222,7 @@
         this.showLoadingWrap = true;
         this.showLoadingImg = true
         if (type === 'sale') {
-          axios.get('http://doclever.cn:8090/mock/5c62e01a3dce46264b25bf54/getPurchaseOrderListMock', {
+          axios.get('getPurchaseOrderList.scm', {
             params: {
               page: page,
               pageAmount: pageAmount,
@@ -266,7 +266,7 @@
               this.showLoadingImg = false
             })
         } else if (type === 'purchase') {
-          axios.get('http://doclever.cn:8090/mock/5c62e01a3dce46264b25bf54/getPurchaseOrderListMock', {
+          axios.get('getPurchaseOrderList.scm', {
             params: {
               page: page,
               pageAmount: pageAmount,
@@ -340,7 +340,6 @@
     justify-content: space-between;
     align-items: center;
     background-color: #F2F6F9;
-    /*border-bottom: 1px solid #e9e9e9;*/
   }
 
   .date-wrap::after {
@@ -419,17 +418,12 @@
     border-radius:0.015rem;
     width:0.21rem;
     height:0.03rem;
-
     position: absolute;
     visibility: hidden;
-    /*left: 50%;*/
-    /*transform: translateX(-50%);*/
     bottom: 0;
-    /*border-bottom: 4px solid blue;*/
   }
 
   .nav-item {
-    /*display: inline-block;*/
     padding: 0 14px;
     width: auto !important;
     font-size: 12px;
@@ -441,20 +435,15 @@
     line-height: 32px;
     border-bottom: 2px solid rgba(237, 91, 0, 0);
     color: #b5b5b5;
-    /*border-color: rgb(242, 242, 242);*/
     width: 100%;
     text-align: center;
   }
 
   .nav-item.nav_active span {
-    /*color: rgb(237, 91, 0);*/
     color: #007aff;
-    /*border-color: rgb(237, 91, 0);*/
   }
 
   .list-wrap {
-    /*height: calc(100% - 0.8rem);*/
-    /*height: calc(100% - 1.2rem);*/
     height: 100%;
     overflow: hidden
   }
@@ -560,6 +549,4 @@
     font-size: 0.09rem;
     color: #bbbbbb;
   }
-
-
 </style>

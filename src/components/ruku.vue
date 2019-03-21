@@ -1,6 +1,6 @@
 <template>
   <div>
-    <MyFilter url="http://doclever.cn:8090/mock/5c62e01a3dce46264b25bf54/getChukuSupplier"></MyFilter>
+    <MyFilter url="getRukuSupplier.scm"></MyFilter>
     <div class="date-wrap">
       <span class="show">{{this.date?this.date:initDate()}}</span>
       <div class="data-plugin-wrap">
@@ -101,7 +101,7 @@
       loadData(page, pageAmount, materiel, organization, date, supplier) {
         this.showLoadingWrap = true;
         this.showLoadingImg = true
-        axios.get('http://doclever.cn:8090/mock/5c62e01a3dce46264b25bf54/getRukuListMock', {
+        axios.get('getRukuList.scm', {
           params: {
             page: page,
             pageAmount: pageAmount,
